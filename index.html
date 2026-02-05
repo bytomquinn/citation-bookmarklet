@@ -27,12 +27,11 @@
 
   <h1>Install: Citation Bookmarklet</h1>
 
-  <p>Drag the button below to your bookmarks bar to install the bookmarklet. If dragging doesn't work for you, click <strong>Copy bookmarklet</strong> and paste into a new bookmark's URL field.</p>
+  <p>Drag the button below to your bookmarks bar to install the bookmarklet; if it is not named, right click -> edit to choose a name.</p>
 
   <div class="row">
     <!-- Visible anchor users will drag; href will be set at runtime -->
     <a id="install-link" class="bm" href="#">Cite Article</a>
-    <button id="copy-btn" title="Copy bookmarklet code to clipboard">Copy bookmarklet</button>
   </div>
 
    <p>While viewing a web article, click the bookmarklet to create a citation; it should open a new tab with the author, title, publication, date, URL, and date accessed in HBS style.</p>
@@ -40,17 +39,13 @@
   <!-- INSTALL INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
 <p class="note">
   <strong>Installation notes:</strong>
-  If the bookmark appears without a name after dragging, this is a browser limitation.
-  Simply right-click the bookmarks bar → <em>Add page…</em>, paste the bookmarklet URL,
-  and name it <strong>Cite Article</strong>.
-
   If a user already installed an older bookmarklet, they must delete the old bookmark and re-drag the button (bookmarks don't update automatically).
 </p>
 
   <!-- OTHER INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
 <p class="note">
   <strong>Caveats:</strong>
-  This is a <strong>starting point.</strong> It is pulling information straight from the website code - for example, some headlines may also include the name of the publication, or some publication names may default to the online version (nytimes.com instead of New York Times). Paste the citation into an endnote and then edit as normal. Tested on many major sites (NYT, WaPo, WSJ, etc), but not guaranteed to work everywhere as I am not a software engineer and don't really know what I am doing.
+  This is a <strong>starting point.</strong> It is pulling information straight from the website code - for example, photographers may be included as authors. Paste the citation into an endnote and then trim/edit as normal. Tested on many major sites (NYT, WaPo, WSJ, etc), but not guaranteed to work everywhere as I am not a software engineer and don't really know what I am doing.
 </p>
 
   <script>
@@ -71,7 +66,7 @@
     var full = 'javascript:' + codeBody;
 
     // Visible page version: change this string on each deploy
-    var PAGE_VERSION = "2/5 9:45 a.m.";
+    var PAGE_VERSION = "2/5 10:00 a.m.";
 
     // Utility: set link href attribute & property and display raw code
     function configureInstallLink() {
@@ -102,22 +97,6 @@
       // Put raw code into <pre>
       var rawEl = document.getElementById('raw');
       rawEl.textContent = full;
-    }
-
-    // Copy fallback button
-    function configureCopyButton() {
-      var btn = document.getElementById('copy-btn');
-      btn.addEventListener('click', function(){
-        if(navigator.clipboard && navigator.clipboard.writeText){
-          navigator.clipboard.writeText(full).then(function(){
-            alert('Bookmarklet code copied to clipboard. Create a new bookmark and paste into the URL field.');
-          }).catch(function(){
-            window.prompt('Copy this (Ctrl+C):', full);
-          });
-        } else {
-          window.prompt('Copy this (Ctrl+C):', full);
-        }
-      });
     }
 
     // Initialize on DOMContentLoaded
