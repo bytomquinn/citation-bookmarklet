@@ -1,38 +1,70 @@
 <!doctype html>
-<html>
-<head><meta charset="utf-8"><title>Install Bookmarklet</title></head>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Citation Bookmarklet — Install</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial; max-width:720px; margin:48px auto; padding:0 20px; color:#111; }
+    .bm { display:inline-block; padding:12px 18px; background:#111; color:#fff; border-radius:8px; text-decoration:none; font-weight:600; }
+    button { margin-left:12px; padding:10px 14px; }
+    pre { background:#f7f7f8; padding:10px; border-radius:6px; overflow:auto; }
+    .note { color:#555; font-size:0.95rem; margin-top:12px; }
+  </style>
+</head>
 <body>
-  <h1>Install the Bookmarklet</h1>
+  <h1>Install: Citation Bookmarklet</h1>
 
-  <p>Drag this button to your bookmarks bar:</p>
+  <p>Drag this button to your bookmarks bar to install the bookmarklet:</p>
 
-  <!-- Visible link users can drag -->
-  <a id="bm-link" class="bookmarklet" href="#">📚 Cite Article</a>
+  <!-- Visible anchor users drag -->
+  <a id="install-link" class="bm" href="#">📚 Cite Article</a>
 
-  <p>Or click the button to copy the bookmarklet code to clipboard:</p>
-  <button id="copy-btn">Copy install code</button>
+  <!-- Copy fallback -->
+  <button id="copy-btn" title="Copy bookmarklet code to clipboard">Copy bookmarklet</button>
+
+  <p class="note">If dragging doesn't work for you, click <strong>Copy bookmarklet</strong>, then create a new bookmark and paste into the URL field.</p>
+
+  <h3>For advanced users: raw install code</h3>
+  <pre id="raw" aria-label="Bookmarklet code (minified)"></pre>
 
   <script>
-    // Put your full minified code (everything inside the (function(){ ... })() )
-    // as a plain string here. No leading "javascript:" — we add that below.
-    var codeBody = "(function(){try{var w=window.open('about:blank','_blank');if(!w){alert('Popup blocked — allow popups');return;}var q=document.querySelector.bind(document),qs=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))},m=function(k){var e=q('meta[name="'+k+'"],meta[property="'+k+'"]');return e?e.getAttribute(%27content%27):null},jlds=(function(){var o=[];qs(%27script[type="application/ld+json"]%27).forEach(function(s){try{o.push(JSON.parse(s.textContent))}catch(e){try{o.push(JSON.parse(s.textContent.replace(/\/\/.*?\n/g,%27%27)))}catch(e){}}});return o;} )(),by=(function(){var t=document.body?document.body.innerText.slice(0,6500):%27%27;var r=t.match(/\bBy\s+([A-Z][^\n]{1,120})/);return r?r[1].trim():null;} )(),metaObj={title:m(%27og:title%27)||m(%27twitter:title%27)||document.title||null,authors:[],date:m(%27article:published_time%27)||m(%27date%27)||null,url:m(%27og:url%27)||(q(%27link[rel=canonical]%27)?q(%27link[rel=canonical]%27).href:location.href),verification:[]};var ma=m(%27author%27)||m(%27article:author%27);if(ma){metaObj.authors.push(ma);metaObj.verification.push(%27author from meta%27)}if(jlds.length){metaObj.verification.push(%27found JSON-LD%27);jlds.forEach(function(it){var arr=Array.isArray(it)?it:[it];arr.forEach(function(o){var A=o.author||o.creator;if(A){if(Array.isArray(A)){A.forEach(function(x){if(typeof x===%27string%27){if(metaObj.authors.indexOf(x)===-1)metaObj.authors.push(x)}else if(x&&x.name){if(metaObj.authors.indexOf(x.name)===-1)metaObj.authors.push(x.name)}})}else if(typeof A===%27string%27){if(metaObj.authors.indexOf(A)===-1)metaObj.authors.push(A)}else if(A&&A.name){if(metaObj.authors.indexOf(A.name)===-1)metaObj.authors.push(A.name)} } if(!metaObj.date&&o.datePublished)metaObj.date=o.datePublished; if(!metaObj.title&&o.headline)metaObj.title=o.headline; if(!metaObj.url&&o.mainEntityOfPage){var me=o.mainEntityOfPage;metaObj.url=(typeof me===%27string%27?me:(me[%27@id%27]||me.url))||metaObj.url}})})}if(!metaObj.authors.length&&by){metaObj.authors=by.split(/\s+(?:and|,|&)\s+/).map(function(s){return s.replace(/^By\s+/i,%27%27).trim()});metaObj.verification.push(%27visible byline heuristic%27)}metaObj.authors=metaObj.authors.map(function(s){return s?String(s).replace(/\s+\(.*?\)$/,%27%27).trim():s}).filter(Boolean);var pick=(function(a){if(!a||!a.length) return null;for(var i=0;i<a.length;i++){var s=String(a[i]); if(/^https?:\/\//.test(s)) continue; if(s.trim()) return s.trim()}return a[0]||null})(metaObj.authors);var author=pick?pick:%27Author not listed%27,date=(function(d){if(!d) return null;try{var D=new Date(d);if(!isNaN(D))return D.toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27,day:%27numeric%27});}catch(e){}var mm=String(d).match(/(\d{4}-\d{2}-\d{2})/);if(mm)return(new Date(mm[1]+%27T00:00:00%27)).toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27,day:%27numeric%27});return d})(metaObj.date)||%27Date not found%27,title=metaObj.title||%27Title not found%27,url=metaObj.url||location.href,site=(function(){var s=m(%27og:site_name%27)||m(%27publisher%27)||null; if(s) return s; try{var h=(new URL(location.href)).hostname.replace(/^www\./,%27%27); return h;}catch(e){return %27%27}})(),accessed=(function(){var now=new Date();return now.toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27});})(),citation=author+%27, "%27+title+%27," %27+(site||%27Publication not listed%27)+%27, %27+date+%27, %27+url+%27, accessed %27+accessed+%27.%27,json=JSON.stringify(metaObj,null,2);var doc=w.document;doc.open();doc.write(%27<!doctype html><html><head><meta charset="utf-8"><title>Citation</title></head><body></body></html>%27);doc.close();var b=doc.body;var p=doc.createElement(%27pre%27);p.style.whiteSpace=%27pre-wrap%27;p.style.fontSize=%2716px%27;p.textContent=citation;b.appendChild(p);b.appendChild(doc.createElement(%27div%27));var h=doc.createElement(%27div%27);h.textContent=%27Extracted metadata (JSON):%27;h.style.color=%27#444';h.style.marginTop='12px';b.appendChild(h);var p2=doc.createElement('pre');p2.style.background='#f7f7f8';p2.style.padding='12px';p2.style.borderRadius='6px';p2.style.whiteSpace='pre-wrap';p2.textContent=json;b.appendChild(p2);var v=doc.createElement('div');v.style.marginTop='12px';v.style.color='#666';v.textContent='Verification: '+(metaObj.verification.join(', ')||'none');b.appendChild(v);}catch(e){alert('Bookmarklet error: '+e);}})();})();";
+    // ======= START: paste your minified bookmarklet body *here* (NO leading "javascript:") =======
+    // Example placeholder (replace this with your real minified code body, one line):
+    var codeBody = "(function(){(function(){try{var w=window.open('about:blank','_blank');if(!w){alert('Popup blocked — allow popups');return;}var q=document.querySelector.bind(document),qs=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))},m=function(k){var e=q('meta[name="'+k+'"],meta[property="'+k+'"]');return e?e.getAttribute(%27content%27):null},jlds=(function(){var o=[];qs(%27script[type="application/ld+json"]%27).forEach(function(s){try{o.push(JSON.parse(s.textContent))}catch(e){try{o.push(JSON.parse(s.textContent.replace(/\/\/.*?\n/g,%27%27)))}catch(e){}}});return o;} )(),by=(function(){var t=document.body?document.body.innerText.slice(0,6500):%27%27;var r=t.match(/\bBy\s+([A-Z][^\n]{1,120})/);return r?r[1].trim():null;} )(),metaObj={title:m(%27og:title%27)||m(%27twitter:title%27)||document.title||null,authors:[],date:m(%27article:published_time%27)||m(%27date%27)||null,url:m(%27og:url%27)||(q(%27link[rel=canonical]%27)?q(%27link[rel=canonical]%27).href:location.href),verification:[]};var ma=m(%27author%27)||m(%27article:author%27);if(ma){metaObj.authors.push(ma);metaObj.verification.push(%27author from meta%27)}if(jlds.length){metaObj.verification.push(%27found JSON-LD%27);jlds.forEach(function(it){var arr=Array.isArray(it)?it:[it];arr.forEach(function(o){var A=o.author||o.creator;if(A){if(Array.isArray(A)){A.forEach(function(x){if(typeof x===%27string%27){if(metaObj.authors.indexOf(x)===-1)metaObj.authors.push(x)}else if(x&&x.name){if(metaObj.authors.indexOf(x.name)===-1)metaObj.authors.push(x.name)}})}else if(typeof A===%27string%27){if(metaObj.authors.indexOf(A)===-1)metaObj.authors.push(A)}else if(A&&A.name){if(metaObj.authors.indexOf(A.name)===-1)metaObj.authors.push(A.name)} } if(!metaObj.date&&o.datePublished)metaObj.date=o.datePublished; if(!metaObj.title&&o.headline)metaObj.title=o.headline; if(!metaObj.url&&o.mainEntityOfPage){var me=o.mainEntityOfPage;metaObj.url=(typeof me===%27string%27?me:(me[%27@id%27]||me.url))||metaObj.url}})})}if(!metaObj.authors.length&&by){metaObj.authors=by.split(/\s+(?:and|,|&)\s+/).map(function(s){return s.replace(/^By\s+/i,%27%27).trim()});metaObj.verification.push(%27visible byline heuristic%27)}metaObj.authors=metaObj.authors.map(function(s){return s?String(s).replace(/\s+\(.*?\)$/,%27%27).trim():s}).filter(Boolean);var pick=(function(a){if(!a||!a.length) return null;for(var i=0;i<a.length;i++){var s=String(a[i]); if(/^https?:\/\//.test(s)) continue; if(s.trim()) return s.trim()}return a[0]||null})(metaObj.authors);var author=pick?pick:%27Author not listed%27,date=(function(d){if(!d) return null;try{var D=new Date(d);if(!isNaN(D))return D.toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27,day:%27numeric%27});}catch(e){}var mm=String(d).match(/(\d{4}-\d{2}-\d{2})/);if(mm)return(new Date(mm[1]+%27T00:00:00%27)).toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27,day:%27numeric%27});return d})(metaObj.date)||%27Date not found%27,title=metaObj.title||%27Title not found%27,url=metaObj.url||location.href,site=(function(){var s=m(%27og:site_name%27)||m(%27publisher%27)||null; if(s) return s; try{var h=(new URL(location.href)).hostname.replace(/^www\./,%27%27); return h;}catch(e){return %27%27}})(),accessed=(function(){var now=new Date();return now.toLocaleDateString(%27en-US%27,{year:%27numeric%27,month:%27long%27});})(),citation=author+%27, "%27+title+%27," %27+(site||%27Publication not listed%27)+%27, %27+date+%27, %27+url+%27, accessed %27+accessed+%27.%27,json=JSON.stringify(metaObj,null,2);var doc=w.document;doc.open();doc.write(%27<!doctype html><html><head><meta charset="utf-8"><title>Citation</title></head><body></body></html>%27);doc.close();var b=doc.body;var p=doc.createElement(%27pre%27);p.style.whiteSpace=%27pre-wrap%27;p.style.fontSize=%2716px%27;p.textContent=citation;b.appendChild(p);b.appendChild(doc.createElement(%27div%27));var h=doc.createElement(%27div%27);h.textContent=%27Extracted metadata (JSON):%27;h.style.color=%27#444';h.style.marginTop='12px';b.appendChild(h);var p2=doc.createElement('pre');p2.style.background='#f7f7f8';p2.style.padding='12px';p2.style.borderRadius='6px';p2.style.whiteSpace='pre-wrap';p2.textContent=json;b.appendChild(p2);var v=doc.createElement('div');v.style.marginTop='12px';v.style.color='#666';v.textContent='Verification: '+(metaObj.verification.join(', ')||'none');b.appendChild(v);}catch(e){alert('Bookmarklet error: '+e);}})();})();";
+    // ======= END: paste your minified bookmarklet body =======
 
-    // Set the href at runtime. This prevents HTML-attribute mangling.
-    var bm = document.getElementById('bm-link');
-    bm.href = 'javascript:' + codeBody;
+    // Build the full href
+    var full = 'javascript:' + codeBody;
 
-    // Optional: copy-to-clipboard fallback for users who prefer a click
-    document.getElementById('copy-btn').addEventListener('click', function(){
-      var full = 'javascript:' + codeBody;
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(full).then(function(){
-          alert('Bookmarklet copied to clipboard. Create a new bookmark and paste into the URL field.');
-        }, function(){
-          window.prompt('Copy this code (Ctrl+C):', full);
-        });
-      } else {
-        window.prompt('Copy this code (Ctrl+C):', full);
-      }
+    // Set the href at runtime so drag uses the exact string (prevents HTML or editor mangling)
+    document.addEventListener('DOMContentLoaded', function(){
+      var link = document.getElementById('install-link');
+      // Important: set the href attribute and property
+      link.setAttribute('href', full);
+      link.href = full;
+
+      // Also set raw visible code for users and copy button
+      var raw = document.getElementById('raw');
+      raw.textContent = full;
+
+      var copyBtn = document.getElementById('copy-btn');
+      copyBtn.addEventListener('click', function(){
+        // Try async clipboard first
+        if(navigator.clipboard && navigator.clipboard.writeText){
+          navigator.clipboard.writeText(full).then(function(){
+            alert('Bookmarklet copied to clipboard. Create a new bookmark and paste into the URL field.');
+          }, function(){
+            // fallback to prompt
+            window.prompt('Copy this (Ctrl+C):', full);
+          });
+        } else {
+          window.prompt('Copy this (Ctrl+C):', full);
+        }
+      });
+
+      // Helpful: change title to show it is a bookmarklet
+      link.title = 'Drag this to your bookmarks bar to install the bookmarklet';
     });
   </script>
 </body>
