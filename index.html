@@ -35,10 +35,23 @@
     <button id="copy-btn" title="Copy bookmarklet code to clipboard">Copy bookmarklet</button>
   </div>
 
-  <p class="note">If a user already installed an older bookmarklet, they must delete the old bookmark and re-drag the button (bookmarks don't update automatically).</p>
+  <!-- INSTALL INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
+<p class="note">
+  <strong>Installation notes:</strong>
+  If the bookmark appears without a name after dragging, this is a browser limitation.
+  Simply right-click the bookmarks bar → <em>Add page…</em>, paste the bookmarklet URL,
+  and name it <strong>Cite Article</strong>.
 
-  <h3>Raw install code (for advanced users)</h3>
-  <pre id="raw" aria-label="Bookmarklet code (minified)"></pre>
+  If a user already installed an older bookmarklet, they must delete the old bookmark and re-drag the button (bookmarks don't update automatically).
+</p>
+
+  <!-- OTHER INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
+<p class="note">
+  <strong>Caveats:</strong>
+  While on a web article page, click the bookmarklet to create a citation; it should open a new tab with the author, title, publication, date, URL, and date accessed in HBS style.
+
+  This is a <strong>starting point.</strong> It is pulling information straight from the website code - for example, some headlines may also include the name of the publication, or some publication names may default to the online version (nytimes.com instead of New York Times). Paste the citation into an endnote and then edit as normal.
+</p>
 
   <script>
     /*****************************************************************************
@@ -122,7 +135,7 @@
         // If it's a regular click, prevent following the javascript: URL and show instructions
         if(e && e.detail && e.detail < 2){
           e.preventDefault();
-          alert('To install the bookmarklet: drag the "📚 Cite Article" button to your bookmarks bar. If drag does not work, click "Copy bookmarklet" and paste into a new bookmark URL.');
+          alert('To install the bookmarklet: drag the "Cite Article" button to your bookmarks bar. If drag does not work, click "Copy bookmarklet" and paste into a new bookmark URL.');
         }
       }, false);
     }, false);
