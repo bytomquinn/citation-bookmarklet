@@ -23,7 +23,7 @@
     (1) <title> above
     (2) the visible version line below (PAGE_VERSION variable)
   -->
-  <div class="version">Bookmarklet version: <strong id="version-text">2/5 8:50 a.m.</strong></div>
+  <div class="version">Bookmarklet version: <strong id="version-text">2/5 9:06 a.m.</strong></div>
 
   <h1>Install: Citation Bookmarklet</h1>
 
@@ -58,7 +58,7 @@
     var full = 'javascript:' + codeBody;
 
     // Visible page version: change this string on each deploy
-    var PAGE_VERSION = "1.0.4";
+    var PAGE_VERSION = "2/5 9:06 a.m.";
 
     // Utility: set link href attribute & property and display raw code
     function configureInstallLink() {
@@ -115,6 +115,46 @@
 
       configureInstallLink();
       configureCopyButton();
+
+      // Defensive fixes to ensure the bookmark name is picked up on drag
+(function ensureBookmarkName(){
+  var link = document.getElementById('install-link');
+  if(!link) return;
+
+  // 1) Guarantee visible text content — this is what browsers use as the bookmark name
+  // Change "Cite Article" to whatever default bookmark name you want users to get.
+  if(!link.textContent || !link.textContent.trim()){
+    link.textContent = 'Cite Article';
+  }
+
+  // 2) Ensure link is draggable (some browsers require this)
+  link.setAttribute('draggable', 'true');
+
+  // 3) On dragstart populate multiple data types (helps cross-browser)
+  link.addEventListener('dragstart', function(e){
+    try {
+      // ensure href is current
+      link.setAttribute('href', full);
+      link.href = full;
+
+      // Provide plain text and uri list (some browsers read these to create bookmark title)
+      e.dataTransfer.setData('text/plain', link.textContent + '\n' + full);
+      e.dataTransfer.setData('text/uri-list', full);
+      // Provide HTML so browsers that parse HTML fragments can find the anchor text
+      e.dataTransfer.setData('text/html', '<a href="' + full + '">' + link.textContent + '</a>');
+    } catch(err){
+      // ignore — some browsers restrict dataTransfer
+    }
+    // Also re-assign href again to be safe
+    link.setAttribute('href', full);
+    link.href = full;
+  }, false);
+
+  // 4) Also set label again on mousedown/touchstart so the gesture picks it up
+  link.addEventListener('mousedown', function(){ link.textContent = 'Cite Article'; link.href = full; }, false);
+  link.addEventListener('touchstart', function(){ link.textContent = 'Cite Article'; link.href = full; }, false);
+})();
+
 
       // If user clicks the link instead of dragging, show instructions (no navigation)
       var installLink = document.getElementById('install-link');
