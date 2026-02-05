@@ -58,7 +58,7 @@
     var full = 'javascript:' + codeBody;
 
     // Visible page version: change this string on each deploy
-    var PAGE_VERSION = "2/5 9:13 a.m.";
+    var PAGE_VERSION = "2/5 9:15 a.m.";
 
     // Utility: set link href attribute & property and display raw code
     function configureInstallLink() {
@@ -115,101 +115,6 @@
 
       configureInstallLink();
       configureCopyButton();
-
-      // ------------------ Start defensive bookmark-name patch ------------------
-(function ensureBookmarkNameMoreAggressive(){
-  var link = document.getElementById('install-link');
-  if(!link) return;
-
-  // The canonical name you want users to get (include version if desired)
-  var desiredName = 'Cite Article v' + PAGE_VERSION; // or just 'Cite Article'
-
-  // 1) Ensure the anchor has a plain text node as the first child
-  //    Some browsers look at the first text node rather than textContent.
-  if(!link.firstChild || link.firstChild.nodeType !== Node.TEXT_NODE){
-    link.insertBefore(document.createTextNode(desiredName), link.firstChild || null);
-  } else {
-    // Make sure the first text node contains the desired name (avoid wiping icons)
-    link.firstChild.nodeValue = desiredName;
-  }
-
-  // 2) Ensure plain visible label and attributes
-  link.removeAttribute('aria-hidden'); // just in case
-  link.setAttribute('draggable', 'true');
-  link.title = desiredName; // tooltip UX (doesn't force bookmark name but helps)
-
-  // 3) Aggressive dragstart payload: include the name in multiple types
-  link.addEventListener('dragstart', function(e){
-    try {
-      // ensure href is current
-      link.setAttribute('href', full);
-      link.href = full;
-
-      // Put the desired name first in text/plain so some browsers pick it up
-      e.dataTransfer.setData('text/plain', desiredName + '\n' + full);
-      e.dataTransfer.setData('text/uri-list', full);
-
-      // Create an HTML snippet with anchor text as the name
-      var html = '<a href="' + full + '">' + desiredName + '</a>';
-      e.dataTransfer.setData('text/html', html);
-
-      // Some browsers read 'DownloadURL' for names — include it as defensive measure
-      try {
-        e.dataTransfer.setData('DownloadURL', 'application/javascript:' + desiredName + ':' + full);
-      } catch(err) { /* ignore if not allowed */ }
-    } catch(err) {
-      // ignore restrictions
-    }
-    // reassign href text nodes again just to be safe
-    if(link.firstChild && link.firstChild.nodeType === Node.TEXT_NODE){
-      link.firstChild.nodeValue = desiredName;
-    }
-  }, false);
-
-  // 4) Also make sure mousedown/touchstart set the visible text
-  link.addEventListener('mousedown', function(){ if(link.firstChild && link.firstChild.nodeType===Node.TEXT_NODE) link.firstChild.nodeValue = desiredName; link.href = full; }, false);
-  link.addEventListener('touchstart', function(){ if(link.firstChild && link.firstChild.nodeType===Node.TEXT_NODE) link.firstChild.nodeValue = desiredName; link.href = full; }, false);
-})();
-      
-      // Defensive fixes to ensure the bookmark name is picked up on drag
-(function ensureBookmarkName(){
-  var link = document.getElementById('install-link');
-  if(!link) return;
-
-  // 1) Guarantee visible text content — this is what browsers use as the bookmark name
-  // Change "Cite Article" to whatever default bookmark name you want users to get.
-  if(!link.textContent || !link.textContent.trim()){
-    link.textContent = 'Cite Article';
-  }
-
-  // 2) Ensure link is draggable (some browsers require this)
-  link.setAttribute('draggable', 'true');
-
-  // 3) On dragstart populate multiple data types (helps cross-browser)
-  link.addEventListener('dragstart', function(e){
-    try {
-      // ensure href is current
-      link.setAttribute('href', full);
-      link.href = full;
-
-      // Provide plain text and uri list (some browsers read these to create bookmark title)
-      e.dataTransfer.setData('text/plain', link.textContent + '\n' + full);
-      e.dataTransfer.setData('text/uri-list', full);
-      // Provide HTML so browsers that parse HTML fragments can find the anchor text
-      e.dataTransfer.setData('text/html', '<a href="' + full + '">' + link.textContent + '</a>');
-    } catch(err){
-      // ignore — some browsers restrict dataTransfer
-    }
-    // Also re-assign href again to be safe
-    link.setAttribute('href', full);
-    link.href = full;
-  }, false);
-
-  // 4) Also set label again on mousedown/touchstart so the gesture picks it up
-  link.addEventListener('mousedown', function(){ link.textContent = 'Cite Article'; link.href = full; }, false);
-  link.addEventListener('touchstart', function(){ link.textContent = 'Cite Article'; link.href = full; }, false);
-})();
-
 
       // If user clicks the link instead of dragging, show instructions (no navigation)
       var installLink = document.getElementById('install-link');
