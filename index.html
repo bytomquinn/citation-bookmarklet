@@ -35,6 +35,8 @@
     <button id="copy-btn" title="Copy bookmarklet code to clipboard">Copy bookmarklet</button>
   </div>
 
+   <p>While viewing a web article, click the bookmarklet to create a citation; it should open a new tab with the author, title, publication, date, URL, and date accessed in HBS style.</p>
+  
   <!-- INSTALL INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
 <p class="note">
   <strong>Installation notes:</strong>
@@ -48,9 +50,7 @@
   <!-- OTHER INSTRUCTIONS (EDIT THIS PARAGRAPH AS NEEDED) -->
 <p class="note">
   <strong>Caveats:</strong>
-  While on a web article page, click the bookmarklet to create a citation; it should open a new tab with the author, title, publication, date, URL, and date accessed in HBS style.
-
-  This is a <strong>starting point.</strong> It is pulling information straight from the website code - for example, some headlines may also include the name of the publication, or some publication names may default to the online version (nytimes.com instead of New York Times). Paste the citation into an endnote and then edit as normal.
+  This is a <strong>starting point.</strong> It is pulling information straight from the website code - for example, some headlines may also include the name of the publication, or some publication names may default to the online version (nytimes.com instead of New York Times). Paste the citation into an endnote and then edit as normal. Tested on many major sites (NYT, WaPo, WSJ, etc), but not guaranteed to work everywhere as I am not a software engineer and don't really know what I am doing.
 </p>
 
   <script>
@@ -71,7 +71,7 @@
     var full = 'javascript:' + codeBody;
 
     // Visible page version: change this string on each deploy
-    var PAGE_VERSION = "2/5 9:37 a.m.";
+    var PAGE_VERSION = "2/5 9:45 a.m.";
 
     // Utility: set link href attribute & property and display raw code
     function configureInstallLink() {
